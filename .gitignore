@@ -1,0 +1,83 @@
+# ----------------------------------------
+# Python
+# ----------------------------------------
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.pyo
+
+# Virtual environment
+.env
+.venv
+env/
+venv/
+
+# Distribuição / Build
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Cache
+.cache/
+pip-wheel-metadata/
+pytest_cache/
+
+# Logs
+*.log
+logs/
+*.out
+
+# Byte-compiled / C Extensions
+*.dll
+*.dylib
+
+# ----------------------------------------
+# FastAPI / Uvicorn
+# ----------------------------------------
+# Arquivos criados pelo Uvicorn ou Gunicorn
+uvicorn.pid
+gunicorn.pid
+
+# ----------------------------------------
+# Configurações / Credenciais
+# ----------------------------------------
+.env.local
+.env.development
+.env.production
+.secrets/
+*.secret
+*.key
+
+# ----------------------------------------
+# Ferramentas / Testes
+# ----------------------------------------
+.coverage
+coverage.xml
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# PyInstaller
+*.manifest
+*.spec
+
+# ----------------------------------------
+# IDEs
+# ----------------------------------------
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# ----------------------------------------
+# Docker (se usar)
+# ----------------------------------------
+# Evitar sobrescrever arquivos do contêiner
+docker-compose.override.yml
+.env

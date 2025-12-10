@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from datetime import datetime
 
+from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, PedidoTotal, ProdutoDesconto
+
 app = FastAPI()
 
 @app.get("/greetings")
@@ -18,7 +20,7 @@ def calcular(numero1: int, numero2: int):
 @app.get("/calculadora/expert")
 def calculadora_expert(operacao: str, n1: int, n2: int):
     if operacao not in ["somar", "subtrair", "dividir", "multiplicar"]:
-        return HTTPException(
+        raise HTTPException(
             status_code=400,
             detail="Operação inválida. Opcões disponíveis [somar, subtrair, dividir, multiplicar]"
         )
@@ -64,10 +66,14 @@ def concatenar_nome(nome: str, sobrenome: str):
         "sobrenome": sobrenome,
         "nomeCompleto": nome_completo
     }
+
+
 # Criar um endpoint 'pessoa/calcular-ano-nascimento' para calcular o ano de nascimento
 #   Query param: idade
 #   Calcular o ano de nascimento
 #   Retornar {"anoNascimento": 1991}
+
+
 @app.get("/pessoa/calcular-ano-nascimento")
 def calcular_ano_nascimento(idade: int):
     data_atual = datetime.now()
@@ -88,6 +94,8 @@ def calcular_ano_nascimento(idade: int):
 # Alterar o endpoint 'pessoa/imc' para retornar o status do imc
 #   Descobrir o status do IMC
 #   Retornar {"imc"': 20.29, "Obesidade III"}
+
+
 @app.get("/pessoa/imc")
 def calcular_imc(altura: float, peso: float):
     imc = peso / (altura * altura)
@@ -108,8 +116,144 @@ def calcular_imc(altura: float, peso: float):
     }
 
 
+@app.post("/aluno/calcular-media")
+def calcular_media(alunos_dados: AlunoCalcularMedia):
+    nota1 = alunos_dados.nota1
+
+    nota2 = alunos_dados.nota2
+
+    nota3 = alunos_dados.nota3
+
+    media = (nota1 + nota2 + nota3) / 3
+
+    return {
+        "media": media,
+        "nome_completo": alunos_dados.nome_completo
+    }
 
 
+# Ex.1 Criar um endpoint do tipo POST /aluno/calcular-frequencia
+# Criar uma classe AlunoFrequencia
+#   nome
+#   quantidade_letivos
+#   quantidade_presencas
+# Payload:
+#   nome do aluno
+#   quantidade letivos
+#   quantidade presencas
+#   
+#   qtd letivos     100
+#   qtd presencas   
+#   (qtd presencas * 100) / qtd letivos
+@app.post("/aluno/calcular-frequencia")
+def calcular_frequencia(aluno_dados: AlunoFrequencia):
+    presenca = aluno_dados.quantidade_presenca
 
+    letivos = aluno_dados.quantidade_letivos
+
+    frequencia = (presenca * 100) / letivos
+
+
+    return {
+        "nome do aluno": aluno_dados.nome,
+        "quantidade letivos": aluno_dados.quantidade_letivos,
+        "quantidade presenca": aluno_dados.quantidade_presenca,
+        "frequncia": frequencia
+    }
+
+
+# Ex.2 Criar um endpoint do tipo POST /produto/calcular-desconto
+# Criar uma classe ProdutoDesconto
+#   nome
+#   preco_original
+#   percentual_desconto
+# Payload:
+#   nome do produto
+#   preço original
+#   percentual de desconto (0 a 100)
+# Fórmulas:
+#   valor_desconto = (preco_original * percentual_desconto) / 100
+#   preco_final = preco_original - valor_desconto
+@app.post("/produto/calcular-desconto")
+def calcular_desconto(produto_dados: ProdutoDesconto):
+    preco_original = produto_dados.preco_original
+
+    percentual_desconto = produto_dados.percentual_desconto
+
+    valor_desconto = (preco_original * percentual_desconto) / 100
+    
+    preco_final = preco_original - valor_desconto
+
+    return {
+        "nome do produto": produto_dados.nome,
+        "preco original": preco_original,
+        "percentual de desconto(0 a 100)": percentual_desconto,
+        "valor do desconto": valor_desconto,
+        "preco final": preco_final
+    }
+
+
+# Ex.3 Criar um endpoint do tipo POST /carro/calcular-autonomia
+# Criar uma classe CarroAutonomia
+#   modelo
+#   consumo_por_litro
+#   quantidade_combustivel
+# Payload:
+#   modelo do carro
+#   consumo por litro (km/l)
+#   quantidade de combustível no tanque (litros)
+#
+# Fórmula:
+#   autonomia = consumo_por_litro * quantidade_combustivel
+@app.post("/carro/calcular-autonomia")
+def calcular_autonomia(carro_dados: CarroAutonomia):
+    consumo_litro = carro_dados.consumo_por_litro
+
+    quantidade_combustivel = carro_dados.quantidade_combustivel
+
+    autonomia = consumo_litro * quantidade_combustivel
+
+    return {
+        "modelo": carro_dados.modelo,
+        "consumo por litro(KM/l)": consumo_litro,
+        "quantidade de combustivel no tanque (litros)": quantidade_combustivel,
+        "autonomia do carro": autonomia
+    }
+
+
+# Ex.4 Criar um endpoint do tipo POST /pedido/calcular-total
+# Criar uma classe PedidoTotal
+#   descricao
+#   quantidade
+#   valor_unitario
+# Payload:
+#   descrição do pedido
+#   quantidade de itens
+#   valor unitário
+#
+# Fórmulas:
+#   subtotal = quantidade * valor_unitario
+#   taxa = subtotal * 0.05  (5% de taxa de serviço)
+#   total = subtotal + taxa
+@app.post("/pedido/calcular-total")
+def calcular_pedido(pedido_dados: PedidoTotal):
+    quantidade = pedido_dados.quantidade
+
+    valor_unitario = pedido_dados.valor_unitario
+
+    subtotal = quantidade * valor_unitario
+
+    taxa = subtotal * 0.05
+
+    total = subtotal +  taxa
+
+    return {
+        "descrição do pedido": pedido_dados.descricao,
+        "quantidade de itens": quantidade,
+        "valor unitário": valor_unitario,
+        "subtotal": subtotal,
+        "taxa adicional": taxa,
+        "total final": total
+    }
 # fastapi dev main.py
 # 127.0.0.1/greetings

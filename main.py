@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from datetime import datetime
 
-from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, PedidoTotal, ProdutoDesconto
+from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, PedidoTotal, ProdutoDesconto
+from src.repositorios import mercado_categoria_repositorio
 
 app = FastAPI()
 
@@ -254,6 +255,40 @@ def calcular_pedido(pedido_dados: PedidoTotal):
         "subtotal": subtotal,
         "taxa adicional": taxa,
         "total final": total
+    }
+
+
+@app.get("/api/v1/categorias", tags=["Categorias"])
+def listar_categorias():
+    categorias = mercado_categoria_repositorio.obter_todos()
+    return categorias
+
+
+@app.post("/api/v1/categorias", tags=["Categorias"])
+def cadastrar_categoria(categoria: CategoriaCriar):
+    mercado_categoria_repositorio.cadastrar(categoria.nome)
+    return {
+        "status": "OK"
+    }
+
+
+@app.delete("/api/v1/categorias/{id}", tags=["Categorias"])
+def apagar_categoria(id: int):
+    linhas_afetadas = mercado_categoria_repositorio.apagar(id)
+
+    if linhas_afetadas == 1:
+        return {
+            "status": "OK"
+        }
+    else:
+        raise HTTPException(status_code=404, detail="Categoria não encontrada")
+    
+
+@app.put("/api/v1/categorias/{id}", tags=["Categorias"])
+def alterar_categoria(id: int, categoria: CategoriaEditar):
+    mercado_categoria_repositorio.editar(id, categoria.nome)
+    return {
+        "status": "OK"
     }
 # fastapi dev main.py
 # 127.0.0.1/greetings

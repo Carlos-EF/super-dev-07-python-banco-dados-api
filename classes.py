@@ -30,3 +30,13 @@ class PedidoTotal(BaseModel):
     descricao: str
     quantidade: int
     valor_unitario: float
+
+
+class CategoriaCriar(BaseModel):
+    nome: str
+
+
+class CategoriaEditar(BaseModel):
+    nome: str
+
+

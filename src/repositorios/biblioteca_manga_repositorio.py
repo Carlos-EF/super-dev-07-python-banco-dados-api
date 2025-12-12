@@ -91,3 +91,4 @@ def obter_todos():
         mangas.append(manga)
 
     return mangas
+

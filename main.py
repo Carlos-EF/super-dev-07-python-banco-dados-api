@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from datetime import datetime
 
 from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, LivroCriar, LivroEditar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar
-from src.repositorios import biblioteca_livro_repositorio, mercado_categoria_repositorio, mercado_produto_repositorio
+from src.repositorios import biblioteca_livro_repositorio, biblioteca_manga_repositorio, mercado_categoria_repositorio, mercado_produto_repositorio
 
 app = FastAPI()
 
@@ -412,5 +412,13 @@ def apagar_livro(id: int):
     }
 
 
+# ---------------------------------------------------------- Mangás -----------------------------------------------------------------------------------------------
+
+
+@app.get("/api/v1/mangas", tags=["Mangás"])
+def listar_mangas():
+    mangas = biblioteca_manga_repositorio.obter_todos()
+
+    return mangas
 # fastapi dev main.pys/
 # 127.0.0.1/greetings///

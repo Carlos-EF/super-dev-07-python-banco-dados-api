@@ -367,5 +367,13 @@ def listar_livros():
     return livros
 
 
-# fastapi dev main.pys
-# 127.0.0.1/greetings
+@app.get("/api/v1/livros/{id}", tags=["Livros"])
+def obter_livro_por_id(id: int):
+    livro = biblioteca_livro_repositorio.obter_por_id(id)
+
+    if livro is None:
+        raise HTTPException(status_code= 404, detail="Livro não encontrado")
+    
+    return livro
+# fastapi dev main.pys/
+# 127.0.0.1/greetings///

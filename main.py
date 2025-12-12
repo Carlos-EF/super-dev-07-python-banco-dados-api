@@ -6,19 +6,19 @@ from src.repositorios import mercado_categoria_repositorio, mercado_produto_repo
 
 app = FastAPI()
 
-@app.get("/greetings")
+@app.get("/greetings", tags=["Saudações"])
 def saudacoes():
     return {"mensagem": "Hello World"}
 
 
-@app.get("/calculadora")
+@app.get("/calculadora", tags=["Calculadora"])
 def calcular(numero1: int, numero2: int):
     soma = numero1 + numero2
     return {"resultado": soma}
 
 
 # (query) vai depois da ? ex.: /calculadora/expert?operacao=somar&n1=100&n2=200
-@app.get("/calculadora/expert")
+@app.get("/calculadora/expert", tags=["Calculadora"])
 def calculadora_expert(operacao: str, n1: int, n2: int):
     if operacao not in ["somar", "subtrair", "dividir", "multiplicar"]:
         raise HTTPException(
@@ -59,7 +59,7 @@ def calculadora_expert(operacao: str, n1: int, n2: int):
         }
     
 
-@app.get("/pessoa/nome-completo")
+@app.get("/pessoa/nome-completo", tags=["Pessoas"])
 def concatenar_nome(nome: str, sobrenome: str):
     nome_completo =  nome + " " + sobrenome
     return {
@@ -75,7 +75,7 @@ def concatenar_nome(nome: str, sobrenome: str):
 #   Retornar {"anoNascimento": 1991}
 
 
-@app.get("/pessoa/calcular-ano-nascimento")
+@app.get("/pessoa/calcular-ano-nascimento", tags=["Pessoas"])
 def calcular_ano_nascimento(idade: int):
     data_atual = datetime.now()
 
@@ -97,7 +97,7 @@ def calcular_ano_nascimento(idade: int):
 #   Retornar {"imc"': 20.29, "Obesidade III"}
 
 
-@app.get("/pessoa/imc")
+@app.get("/pessoa/imc", tags=["Pessoas"])
 def calcular_imc(altura: float, peso: float):
     imc = peso / (altura * altura)
     if imc < 18.5:
@@ -117,7 +117,7 @@ def calcular_imc(altura: float, peso: float):
     }
 
 
-@app.post("/aluno/calcular-media")
+@app.post("/aluno/calcular-media", tags=["Alunos"])
 def calcular_media(alunos_dados: AlunoCalcularMedia):
     nota1 = alunos_dados.nota1
 
@@ -146,7 +146,7 @@ def calcular_media(alunos_dados: AlunoCalcularMedia):
 #   qtd letivos     100
 #   qtd presencas   
 #   (qtd presencas * 100) / qtd letivos
-@app.post("/aluno/calcular-frequencia")
+@app.post("/aluno/calcular-frequencia", tags=["Alunos"])
 def calcular_frequencia(aluno_dados: AlunoFrequencia):
     presenca = aluno_dados.quantidade_presenca
 
@@ -175,7 +175,7 @@ def calcular_frequencia(aluno_dados: AlunoFrequencia):
 # Fórmulas:
 #   valor_desconto = (preco_original * percentual_desconto) / 100
 #   preco_final = preco_original - valor_desconto
-@app.post("/produto/calcular-desconto")
+@app.post("/produto/calcular-desconto", tags=["Atividades"])
 def calcular_desconto(produto_dados: ProdutoDesconto):
     preco_original = produto_dados.preco_original
 
@@ -206,7 +206,7 @@ def calcular_desconto(produto_dados: ProdutoDesconto):
 #
 # Fórmula:
 #   autonomia = consumo_por_litro * quantidade_combustivel
-@app.post("/carro/calcular-autonomia")
+@app.post("/carro/calcular-autonomia", tags=["Atividades"])
 def calcular_autonomia(carro_dados: CarroAutonomia):
     consumo_litro = carro_dados.consumo_por_litro
 
@@ -236,7 +236,9 @@ def calcular_autonomia(carro_dados: CarroAutonomia):
 #   subtotal = quantidade * valor_unitario
 #   taxa = subtotal * 0.05  (5% de taxa de serviço)
 #   total = subtotal + taxa
-@app.post("/pedido/calcular-total")
+
+
+@app.post("/pedido/calcular-total", tags=["Atividades"])
 def calcular_pedido(pedido_dados: PedidoTotal):
     quantidade = pedido_dados.quantidade
 
@@ -303,6 +305,9 @@ def buscar_categoria_por_id(id: int):
         raise HTTPException(status_code=404, detail="Categoria não encontrada")
     
     return categoria
+
+
+# ---------------------------------------------------------- Produtos -----------------------------------------------------------------------------------------------
 
 
 @app.get("/api/v1/produtos", tags=["Produtos"])

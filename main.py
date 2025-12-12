@@ -399,6 +399,18 @@ def alterar_livro(id: int, livro: LivroEditar):
     }
 
 
+@app.delete("/api/v1/livros/{id}", tags=["Livros"])
+def apagar_livro(id: int):
+    linhas_apagadas = biblioteca_livro_repositorio.apagar(id)
+
+    if linhas_apagadas != 1:
+        raise HTTPException(status_code= 404, detail="Livro não encontrado")
+    
+
+    return {
+        "status": "OK"
+    }
+
 
 # fastapi dev main.pys/
 # 127.0.0.1/greetings///

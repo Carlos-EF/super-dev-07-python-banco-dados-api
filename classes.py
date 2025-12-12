@@ -40,3 +40,11 @@ class CategoriaEditar(BaseModel):
     nome: str
 
 
+class ProdutoCriar(BaseModel):
+    nome: str
+    id_categoria: int
+
+
+class ProdutoEditar(BaseModel):
+    nome: str
+    id_categoria: int

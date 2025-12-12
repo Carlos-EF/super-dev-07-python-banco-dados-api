@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from datetime import datetime
 
-from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, PedidoTotal, ProdutoDesconto
-from src.repositorios import mercado_categoria_repositorio
+from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar
+from src.repositorios import mercado_categoria_repositorio, mercado_produto_repositorio
 
 app = FastAPI()
 
@@ -286,9 +286,72 @@ def apagar_categoria(id: int):
 
 @app.put("/api/v1/categorias/{id}", tags=["Categorias"])
 def alterar_categoria(id: int, categoria: CategoriaEditar):
-    mercado_categoria_repositorio.editar(id, categoria.nome)
+    linhas_afetadas = mercado_categoria_repositorio.editar(id, categoria.nome)
+    if linhas_afetadas == 1:
+        return {
+            "status": "OK"
+        }
+    else:
+        raise HTTPException(status_code=404, detail="Categoria não encontrada.")
+    
+
+@app.get("/api/v1/categorias/{id}", tags=["Categorias"])
+def buscar_categoria_por_id(id: int):
+    categoria = mercado_categoria_repositorio.obter_por_id(id)
+
+    if categoria is None:
+        raise HTTPException(status_code=404, detail="Categoria não encontrada")
+    
+    return categoria
+
+
+@app.get("/api/v1/produtos", tags=["Produtos"])
+def listar_todos_produtos():
+    produtos = mercado_produto_repositorio.obter_todos()
+    return produtos
+
+
+@app.post("/api/v1/produtos", tags=["Produtos"])
+def cadastrar_produto(produto: ProdutoCriar):
+    mercado_produto_repositorio.cadastrar(produto.nome, produto.id_categoria)
     return {
         "status": "OK"
     }
-# fastapi dev main.py
+
+
+@app.put("/api/v1/produtos/{id}", tags=["Produtos"])
+def alterar_produto(id: int, produto: ProdutoEditar):
+    linhas_afetadas = mercado_produto_repositorio.editar(id, produto.nome, produto.id_categoria)
+
+    if linhas_afetadas != 1:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+    
+    return {
+        "status": "OK"
+    }
+
+
+@app.delete("/api/v1/produtos/{id}", tags=["Produtos"])
+def apagar_produto(id: int):
+    linhas_afetadas = mercado_produto_repositorio.apagar(id)
+
+    if linhas_afetadas != 1:
+        raise HTTPException(status_code= 404, detail="Produto não encontrado")
+    
+    return {
+        "status": "OK"
+    }
+
+
+@app.get("/api/v1/produtos/{id}", tags=["Produtos"])
+def obter_produto_por_id(id: int):
+    produto = mercado_produto_repositorio.obter_por_id(id)
+
+    if produto is None:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+    
+    return produto
+
+
+# fastapi dev main.pys
 # 127.0.0.1/greetings

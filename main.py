@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from datetime import datetime
 
 from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar
-from src.repositorios import mercado_categoria_repositorio, mercado_produto_repositorio
+from src.repositorios import biblioteca_livro_repositorio, mercado_categoria_repositorio, mercado_produto_repositorio
 
 app = FastAPI()
 
@@ -356,6 +356,15 @@ def obter_produto_por_id(id: int):
         raise HTTPException(status_code=404, detail="Produto não encontrado")
     
     return produto
+
+
+# ---------------------------------------------------------- Livros -----------------------------------------------------------------------------------------------
+
+
+@app.get("/api/v1/livros", tags=["Livros"])
+def listar_livros():
+    livros = biblioteca_livro_repositorio.obter_todos()
+    return livros
 
 
 # fastapi dev main.pys

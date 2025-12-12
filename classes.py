@@ -32,12 +32,18 @@ class PedidoTotal(BaseModel):
     valor_unitario: float
 
 
+# ---------------------------------------------------------- Categorias -----------------------------------------------------------------------------------------------
+
+
 class CategoriaCriar(BaseModel):
     nome: str
 
 
 class CategoriaEditar(BaseModel):
     nome: str
+
+
+# ---------------------------------------------------------- Produtos -----------------------------------------------------------------------------------------------
 
 
 class ProdutoCriar(BaseModel):
@@ -48,3 +54,25 @@ class ProdutoCriar(BaseModel):
 class ProdutoEditar(BaseModel):
     nome: str
     id_categoria: int
+
+
+# ---------------------------------------------------------- Livros -----------------------------------------------------------------------------------------------
+
+
+class LivroCriar(BaseModel):
+    titulo: str
+    quantidade_paginas: int
+    autor: str
+    preco: float
+    isbn: str
+    descricao: str
+
+
+class LivroEditar(BaseModel):
+    titulo: str
+    quantidade_paginas: int
+    autor: str
+    preco: float
+    isbn: str
+    descricao: str
+

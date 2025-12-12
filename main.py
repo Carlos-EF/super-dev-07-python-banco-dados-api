@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from datetime import datetime
 
-from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, LivroCriar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar
+from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, LivroCriar, LivroEditar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar
 from src.repositorios import biblioteca_livro_repositorio, mercado_categoria_repositorio, mercado_produto_repositorio
 
 app = FastAPI()
@@ -384,6 +384,20 @@ def cadastrar_livro(livro: LivroCriar):
     return {
         "status": "OK"
     }
+
+
+@app.put("/api/v1/livros/{id}", tags=["Livros"])
+def alterar_livro(id: int, livro: LivroEditar):
+    linhas_alteradas = biblioteca_livro_repositorio.editar(id, livro.titulo, livro.quantidade_paginas, livro.autor, livro.preco, livro.isbn, livro.descricao)
+
+    if linhas_alteradas != 1:
+        raise HTTPException(status_code= 404, detail="Livro não encontrado")
+    
+
+    return {
+        "status": "OK"
+    }
+
 
 
 # fastapi dev main.pys/

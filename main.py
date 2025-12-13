@@ -454,5 +454,18 @@ def editar_manga(id: int, manga: MangaEditar):
     }
 
 
+url_manga_com_id = "/api/v1/mangas/{id}"
+@app.delete(url_manga_com_id, tags=["Mangás"])
+def apagar_manga(id: int):
+    linhas_apagadas = biblioteca_manga_repositorio.apagar(id)
+
+    if linhas_apagadas != 1:
+        raise HTTPException(status_code= 404, detail="Mangá não encontrado")
+    
+    return {
+        "status": "OK"
+    }
+
+
 # fastapi dev main.pys/
 # 127.0.0.1/greetings///

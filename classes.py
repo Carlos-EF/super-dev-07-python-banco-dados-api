@@ -1,3 +1,4 @@
+from datetime import date
 from pydantic import BaseModel
 
 
@@ -76,3 +77,19 @@ class LivroEditar(BaseModel):
     isbn: str
     descricao: str
 
+
+# ---------------------------------------------------------- Mangás -----------------------------------------------------------------------------------------------
+
+
+class MangaCriar(BaseModel):
+    nome: str
+    volume: int
+    autor: str  
+    data_lancamento: date
+
+
+class MangaEditar(BaseModel):
+    nome: str
+    volume: int
+    autor: str  
+    data_lancamento: date

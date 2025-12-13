@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from datetime import datetime
 
-from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, LivroCriar, LivroEditar, MangaCriar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar
+from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, LivroCriar, LivroEditar, MangaCriar, MangaEditar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar
 from src.repositorios import biblioteca_livro_repositorio, biblioteca_manga_repositorio, mercado_categoria_repositorio, mercado_produto_repositorio
 
 app = FastAPI()
@@ -437,6 +437,18 @@ def obter_manga_por_id(id: int):
 def cadastrar_manga(manga: MangaCriar):
     biblioteca_manga_repositorio.cadastrar(manga.nome, manga.volume, manga.autor, manga.data_lancamento)
 
+    return {
+        "status": "OK"
+    }
+
+
+@app.put("/api/v1/mangas/{id}", tags=["Mangás"])
+def editar_manga(id: int, manga: MangaEditar):
+    linhas_alteradas = biblioteca_manga_repositorio.editar(id, manga.nome, manga.volume, manga.autor, manga.data_lancamento)
+
+    if linhas_alteradas != 1:
+        raise HTTPException(status_code= 404, detail="Mangá não encontrado")
+    
     return {
         "status": "OK"
     }

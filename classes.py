@@ -93,3 +93,20 @@ class MangaEditar(BaseModel):
     volume: int
     autor: str  
     data_lancamento: date
+
+
+# ---------------------------------------------------------- Revistas -----------------------------------------------------------------------------------------------
+
+
+class RevistaCriar(BaseModel):
+    titulo: str
+    edicao: int
+    data_publicacao: date
+    editora: str
+
+
+class RevistaEditar(BaseModel):
+    titulo: str
+    edicao: int
+    data_publicacao: date
+    editora: str

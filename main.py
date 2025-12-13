@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from datetime import datetime
 
-from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, LivroCriar, LivroEditar, MangaCriar, MangaEditar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar
+from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, LivroCriar, LivroEditar, MangaCriar, MangaEditar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar, RevistaCriar
 from src.repositorios import biblioteca_livro_repositorio, biblioteca_manga_repositorio, biblioteca_revista_repositorio, mercado_categoria_repositorio, mercado_produto_repositorio
 
 app = FastAPI()
@@ -490,6 +490,15 @@ def obter_revista_por_id(id: int):
         raise HTTPException(status_code= 404, detail="Revista não encontrada")
     
     return revista
+
+
+@app.post(url_revista, tags=["Revistas"])
+def cadastrar_revista(revista: RevistaCriar):
+    biblioteca_revista_repositorio.cadastrar(revista.titulo, revista.edicao, revista.data_publicacao, revista.editora)
+
+    return {
+        "status": "OK"
+    }
 
 
 

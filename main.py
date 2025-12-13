@@ -482,5 +482,16 @@ def listar_revistas():
     return revistas
 
 
-# fastapi dev main.pys/
+@app.get(url_revista_com_id, tags=["Revistas"])
+def obter_revista_por_id(id: int):
+    revista = biblioteca_revista_repositorio.obter_por_id(id)
+
+    if revista is None:
+        raise HTTPException(status_code= 404, detail="Revista não encontrada")
+    
+    return revista
+
+
+
+# fastapi dev main.pys///
 # 127.0.0.1/greetings///

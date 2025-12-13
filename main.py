@@ -508,10 +508,23 @@ def editar_revista(id: int, revista: RevistaEditar):
     if linhas_alteradas != 1:
         raise HTTPException(status_code= 404, detail="Revista não encontrada")
     
+
     return {
         "status": "OK"
     }
 
+
+@app.delete(url_revista_com_id, tags=["Revistas"])
+def apagar_revista(id: int):
+    linhas_apagadas = biblioteca_revista_repositorio.apagar(id)
+
+    if linhas_apagadas != 1:
+        raise HTTPException(status_code= 404, detail="Revista não encontrada")
+    
+
+    return {
+        "status": "OK"
+    }
 
 
 # fastapi dev main.pys///

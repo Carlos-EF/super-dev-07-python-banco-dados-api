@@ -92,3 +92,28 @@ def obter_todos():
 
     return mangas
 
+
+def obter_por_id(id: int):
+    conexao = conectar_biblioteca()
+
+    cursor = conexao.cursor()
+
+    sql = "SELECT id, nome, volume, autor, data_lancamento FROM mangas WHERE id = %s"
+
+    dados = (id, )
+
+    cursor.execute(sql, dados)
+
+    registro = cursor.fetchone()
+
+    if not registro:
+        return None
+    
+    return {
+        "id": registro[0],
+        "nome": registro[1],
+        "volume": registro[2],
+        "autor": registro[3],
+        "data_lancamento": registro[4],
+    }
+

@@ -420,5 +420,19 @@ def listar_mangas():
     mangas = biblioteca_manga_repositorio.obter_todos()
 
     return mangas
+
+
+@app.get("/api/v1/mangas/{id}", tags=["Mangás"])
+def obter_manga_por_id(id: int):
+    manga = biblioteca_manga_repositorio.obter_por_id(id)
+
+    if manga is None:
+        raise HTTPException(status_code= 404, detail="Mangá não encontrado")
+    
+
+    return manga
+
+
+
 # fastapi dev main.pys/
 # 127.0.0.1/greetings///

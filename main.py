@@ -1,7 +1,7 @@
 from fastapi import Depends, FastAPI, HTTPException
 from datetime import datetime
 
-from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, ClienteCriar, LivroCriar, LivroEditar, MangaCriar, MangaEditar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar, RevistaCriar, RevistaEditar
+from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, ClienteCriar, ClienteEditar, LivroCriar, LivroEditar, MangaCriar, MangaEditar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar, RevistaCriar, RevistaEditar
 from src.database.conexao import get_db
 from src.repositorios import biblioteca_livro_repositorio, biblioteca_manga_repositorio, biblioteca_revista_repositorio, mercado_categoria_repositorio, mercado_cliente_repositorio, mercado_produto_repositorio
 
@@ -549,6 +549,38 @@ def cadastrar_clientes(cliente: ClienteCriar, db: Session = Depends(get_db)):
 def listar_clientes(db: Session = Depends(get_db)):
     clientes = mercado_cliente_repositorio.obter_todos(db)
     return clientes
+
+
+@app.delete("/api/v1/clientes/{id}", tags=["Clientes"])
+def apagar_cliente(id: int, db: Session = Depends(get_db)):
+    linhas_afetadas = mercado_cliente_repositorio.apagar(db, id)
+    if not linhas_afetadas:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+    
+    return {
+        "status": "OK"
+    }
+
+
+@app.get("/api/v1/clientes/{id}", tags=["Clientes"])
+def obter_cliente(id: int, db: Session = Depends(get_db)):
+    cliente = mercado_cliente_repositorio.obter_por_id(db, id)
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+    
+    return cliente
+
+
+@app.put("/api/v1/clientes/{id}", tags=["Clientes"])
+def editar_cliente(id: int, cliente: ClienteEditar, db: Session = Depends(get_db)):
+    linhas_afetadas = mercado_cliente_repositorio.editar(db, id, cliente.data_nascimento, cliente.limite)
+    if not linhas_afetadas:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+    
+    return {
+        "status": "OK"
+    }
+
 
 
 # fastapi dev main.pys///

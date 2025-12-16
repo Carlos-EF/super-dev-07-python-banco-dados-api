@@ -110,3 +110,18 @@ class RevistaEditar(BaseModel):
     edicao: int
     data_publicacao: date
     editora: str
+
+# ---------------------------------------------------------- Clientes -----------------------------------------------------------------------------------------------
+
+class ClienteCriar(BaseModel):
+    nome: str
+    cpf: str
+    data_nascimento: date
+    limite: float
+
+
+class ClienteEditar(BaseModel):
+    nome: str
+    cpf: str
+    data_nascimento: date
+    limite: float

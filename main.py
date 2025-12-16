@@ -1,8 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from datetime import datetime
 
-from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, LivroCriar, LivroEditar, MangaCriar, MangaEditar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar, RevistaCriar, RevistaEditar
-from src.repositorios import biblioteca_livro_repositorio, biblioteca_manga_repositorio, biblioteca_revista_repositorio, mercado_categoria_repositorio, mercado_produto_repositorio
+from classes import AlunoCalcularMedia, AlunoFrequencia, CarroAutonomia, CategoriaCriar, CategoriaEditar, ClienteCriar, LivroCriar, LivroEditar, MangaCriar, MangaEditar, PedidoTotal, ProdutoCriar, ProdutoDesconto, ProdutoEditar, RevistaCriar, RevistaEditar
+from src.database.conexao import get_db
+from src.repositorios import biblioteca_livro_repositorio, biblioteca_manga_repositorio, biblioteca_revista_repositorio, mercado_categoria_repositorio, mercado_cliente_repositorio, mercado_produto_repositorio
+
+from sqlalchemy.orm import Session
 
 app = FastAPI()
 
@@ -261,22 +264,22 @@ def calcular_pedido(pedido_dados: PedidoTotal):
 
 
 @app.get("/api/v1/categorias", tags=["Categorias"])
-def listar_categorias():
-    categorias = mercado_categoria_repositorio.obter_todos()
+def listar_categorias(db: Session = Depends(get_db)):
+    categorias = mercado_categoria_repositorio.obter_todos(db)
     return categorias
 
 
 @app.post("/api/v1/categorias", tags=["Categorias"])
-def cadastrar_categoria(categoria: CategoriaCriar):
-    mercado_categoria_repositorio.cadastrar(categoria.nome)
+def cadastrar_categoria(categoria: CategoriaCriar, db: Session = Depends(get_db)):
+    mercado_categoria_repositorio.cadastrar(db, categoria.nome)
     return {
         "status": "OK"
     }
 
 
 @app.delete("/api/v1/categorias/{id}", tags=["Categorias"])
-def apagar_categoria(id: int):
-    linhas_afetadas = mercado_categoria_repositorio.apagar(id)
+def apagar_categoria(id: int, db: Session = Depends(get_db)):
+    linhas_afetadas = mercado_categoria_repositorio.apagar(db, id)
 
     if linhas_afetadas == 1:
         return {
@@ -287,8 +290,8 @@ def apagar_categoria(id: int):
     
 
 @app.put("/api/v1/categorias/{id}", tags=["Categorias"])
-def alterar_categoria(id: int, categoria: CategoriaEditar):
-    linhas_afetadas = mercado_categoria_repositorio.editar(id, categoria.nome)
+def alterar_categoria(id: int, categoria: CategoriaEditar, db: Session = Depends(get_db)):
+    linhas_afetadas = mercado_categoria_repositorio.editar(db, id, categoria.nome)
     if linhas_afetadas == 1:
         return {
             "status": "OK"
@@ -298,8 +301,8 @@ def alterar_categoria(id: int, categoria: CategoriaEditar):
     
 
 @app.get("/api/v1/categorias/{id}", tags=["Categorias"])
-def buscar_categoria_por_id(id: int):
-    categoria = mercado_categoria_repositorio.obter_por_id(id)
+def buscar_categoria_por_id(id: int, db : Session = Depends(get_db)):
+    categoria = mercado_categoria_repositorio.obter_por_id(db, id)
 
     if categoria is None:
         raise HTTPException(status_code=404, detail="Categoria não encontrada")
@@ -527,5 +530,19 @@ def apagar_revista(id: int):
     }
 
 
+# ---------------------------------------------------------- Clientes -----------------------------------------------------------------------------------------------
+
+
+@app.post("/api/v1/clientes")
+# ---------------------------------------------------------- Revistas -----------------------------------------------------------------------------------------------
+def cadastrar_clientes(cliente: ClienteCriar, db: Session = Depends(get_db)):
+    cliente = mercado_cliente_repositorio.cadastrar(
+        db,
+        cliente.nome,
+        cliente.cpf,
+        cliente.data_nascimento,
+        cliente.limite,
+        )
+    return cliente
 # fastapi dev main.pys///
 # 127.0.0.1/greetings///

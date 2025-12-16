@@ -16,3 +16,9 @@ def cadastrar(db: Session, nome: str, cpf: str, data_nascimento: date, limite: f
     db.commit()
     db.refresh(cliente)
     return cliente
+
+
+def obter_todos(db: Session):
+    clientes = db.query(Cliente).all()
+    return clientes
+

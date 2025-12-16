@@ -533,8 +533,7 @@ def apagar_revista(id: int):
 # ---------------------------------------------------------- Clientes -----------------------------------------------------------------------------------------------
 
 
-@app.post("/api/v1/clientes")
-# ---------------------------------------------------------- Revistas -----------------------------------------------------------------------------------------------
+@app.post("/api/v1/clientes", tags=["Clientes"])
 def cadastrar_clientes(cliente: ClienteCriar, db: Session = Depends(get_db)):
     cliente = mercado_cliente_repositorio.cadastrar(
         db,
@@ -544,5 +543,13 @@ def cadastrar_clientes(cliente: ClienteCriar, db: Session = Depends(get_db)):
         cliente.limite,
         )
     return cliente
+
+
+@app.get("/api/v1/clientes", tags=["Clientes"])
+def listar_clientes(db: Session = Depends(get_db)):
+    clientes = mercado_cliente_repositorio.obter_todos(db)
+    return clientes
+
+
 # fastapi dev main.pys///
 # 127.0.0.1/greetings///

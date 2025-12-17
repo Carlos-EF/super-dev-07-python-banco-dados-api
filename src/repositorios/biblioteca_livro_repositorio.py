@@ -1,5 +1,9 @@
 from src.banco_dados import conectar_biblioteca
 
+from sqlalchemy.orm import Session
+
+from src.database.models import Livro
+
 
 def apagar(id: int) -> int:
     conexao = conectar_biblioteca()
@@ -23,22 +27,20 @@ def apagar(id: int) -> int:
     return linhas_apagadas
 
 
-def cadastrar(titulo: str, quantidade_paginas: int, autor: str, preco: float, isbn: str, descricao: str):
-    conexao = conectar_biblioteca()
+def cadastrar(db: Session, titulo: str, quantidade_paginas: int, autor: str, preco: float, isbn: str, descricao: str):
+    livro = Livro(
+        titulo=titulo,
+        quantidade_paginas=quantidade_paginas,
+        autor=autor,
+        preco=preco,
+        isbn=isbn,
+        descricao=descricao
+    )
 
-    cursor = conexao.cursor()
-
-    sql = "INSERT INTO livros (titulo, quantidade_paginas, autor, preco, isbn, descricao) VALUE (%s, %s, %s, %s, %s, %s)"
-
-    dados = (titulo, quantidade_paginas, autor, preco, isbn, descricao)
-
-    cursor.execute(sql, dados)
-
-    conexao.commit()
-
-    cursor.close()
-
-    conexao.close()
+    db.add(livro)
+    db.commit()
+    db.refresh(livro)
+    return livro
 
 
 def editar(id: int, titulo: str, quantidade_paginas: int, autor: str, preco: float, isbn: str, descricao: str) -> int:
@@ -63,36 +65,9 @@ def editar(id: int, titulo: str, quantidade_paginas: int, autor: str, preco: flo
     return linhas_alteradas
 
 
-def obter_todos():
-    conexao = conectar_biblioteca()
+def obter_todos(db: Session):
+    livros = db.query(Livro).all()
 
-    cursor = conexao.cursor()
-
-    sql = "SELECT id, titulo, quantidade_paginas, autor, preco, isbn, descricao FROM livros"
-
-    cursor.execute(sql)
-
-    registros = cursor.fetchall()
-
-    cursor.close()
-
-    conexao.close()
-
-    livros = []
-
-    for registro in registros:
-        livro = {
-            "id": registro[0],
-            "titulo": registro[1],
-            "quantidade_paginas": registro[2],
-            "autor": registro[3],
-            "preco": registro[4],
-            "isbn": registro[5],
-            "descricao": registro[6],
-        }
-
-        livros.append(livro)
-    
     return livros
 
 

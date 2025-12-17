@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Date, Double, ForeignKey, Integer, String
+from sqlalchemy import Column, Date, Double, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import declarative_base, relationship
 
 
@@ -39,3 +39,18 @@ class Produto(Base):
     id_categoria = Column(Integer, ForeignKey("categorias.id"))
 
     categoria = relationship("Categoria", back_populates="produto")
+
+
+# -------------------------------------------------------------------- Biblioteca : Livro -----------------------------------------------------------------------
+
+class Livro(Base):
+    __tablename__= "livros"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    titulo = Column(String(100), nullable=False)
+    quantidade_paginas = Column(Integer, nullable=False)
+    autor = Column(String(100), nullable=False)
+    preco = Column(Double, nullable=False)
+    isbn = Column(String(100), nullable=False)
+    descricao = Column(Text, nullable=False)
+

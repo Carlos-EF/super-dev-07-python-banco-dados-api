@@ -365,8 +365,8 @@ def obter_produto_por_id(id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/api/v1/livros", tags=["Livros"])
-def listar_livros():
-    livros = biblioteca_livro_repositorio.obter_todos()
+def listar_livros(db: Session = Depends(get_db)):
+    livros = biblioteca_livro_repositorio.obter_todos(db)
     return livros
 
 
@@ -381,8 +381,8 @@ def obter_livro_por_id(id: int):
 
 
 @app.post("/api/v1/livros", tags=["Livros"])
-def cadastrar_livro(livro: LivroCriar):
-    biblioteca_livro_repositorio.cadastrar(livro.titulo, livro.quantidade_paginas, livro.autor, livro.preco, livro.isbn, livro.descricao)
+def cadastrar_livro(livro: LivroCriar, db: Session = Depends(get_db)):
+    biblioteca_livro_repositorio.cadastrar(db, livro.titulo, livro.quantidade_paginas, livro.autor, livro.preco, livro.isbn, livro.descricao)
 
     return {
         "status": "OK"

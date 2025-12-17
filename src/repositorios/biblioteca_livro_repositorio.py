@@ -31,26 +31,20 @@ def cadastrar(db: Session, titulo: str, quantidade_paginas: int, autor: str, pre
     return livro
 
 
-def editar(id: int, titulo: str, quantidade_paginas: int, autor: str, preco: float, isbn: str, descricao: str) -> int:
-    conexao = conectar_biblioteca()
-
-    cursor = conexao.cursor()
-
-    sql = "UPDATE livros SET titulo= %s, quantidade_paginas= %s, autor= %s, preco= %s, isbn= %s, descricao= %s WHERE id = %s"
-
-    dados = (titulo, quantidade_paginas, autor, preco, isbn, descricao, id)
-
-    cursor.execute(sql, dados)
-
-    conexao.commit()
-
-    linhas_alteradas = cursor.rowcount
-
-    cursor.close()
-
-    conexao.close()
-
-    return linhas_alteradas
+def editar(db: Session, id: int, titulo: str, quantidade_paginas: int, autor: str, preco: float, isbn: str, descricao: str) -> int:
+    livro = db.query(Livro).filter(Livro.id == id).first()
+    if not livro:
+        return 0
+    
+    livro.titulo = titulo
+    livro.quantidade_paginas = quantidade_paginas
+    livro.autor = autor
+    livro.preco = preco
+    livro.isbn = isbn
+    livro.descricao = descricao
+    db.commit()
+    return 1
+    
 
 
 def obter_todos(db: Session):

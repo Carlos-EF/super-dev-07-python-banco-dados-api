@@ -390,8 +390,8 @@ def cadastrar_livro(livro: LivroCriar, db: Session = Depends(get_db)):
 
 
 @app.put("/api/v1/livros/{id}", tags=["Livros"])
-def alterar_livro(id: int, livro: LivroEditar):
-    linhas_alteradas = biblioteca_livro_repositorio.editar(id, livro.titulo, livro.quantidade_paginas, livro.autor, livro.preco, livro.isbn, livro.descricao)
+def alterar_livro(id: int, livro: LivroEditar, db: Session = Depends(get_db)):
+    linhas_alteradas = biblioteca_livro_repositorio.editar(db, id, livro.titulo, livro.quantidade_paginas, livro.autor, livro.preco, livro.isbn, livro.descricao)
 
     if linhas_alteradas != 1:
         raise HTTPException(status_code= 404, detail="Livro não encontrado")

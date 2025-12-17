@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Date, Double, Integer, String
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, Date, Double, ForeignKey, Integer, String
+from sqlalchemy.orm import declarative_base, relationship
 
 
 Base = declarative_base()
@@ -13,6 +13,8 @@ class Categoria(Base):
     # Coluna do nome que n permite nulo
     nome = Column(String(255), nullable=False)
 
+    produto = relationship("Produto", back_populates="categoria")
+
 
 class Cliente(Base):
     __tablename__ = "clientes"
@@ -25,3 +27,15 @@ class Cliente(Base):
 
     # nullable=False campo é obrigatório
     # nullable=True campo não é obrigatório
+
+
+class Produto(Base):
+    __tablename__ = "produtos"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nome = Column(String(100), nullable=False)
+
+    # FK que relaciona a PK (categorias.id)
+    id_categoria = Column(Integer, ForeignKey("categorias.id"))
+
+    categoria = relationship("Categoria", back_populates="produto")

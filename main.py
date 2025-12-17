@@ -314,8 +314,8 @@ def buscar_categoria_por_id(id: int, db : Session = Depends(get_db)):
 
 
 @app.get("/api/v1/produtos", tags=["Produtos"])
-def listar_todos_produtos():
-    produtos = mercado_produto_repositorio.obter_todos()
+def listar_todos_produtos(db: Session = Depends(get_db)):
+    produtos = mercado_produto_repositorio.obter_todos(db)
     return produtos
 
 

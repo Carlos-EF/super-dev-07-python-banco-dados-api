@@ -371,8 +371,8 @@ def listar_livros(db: Session = Depends(get_db)):
 
 
 @app.get("/api/v1/livros/{id}", tags=["Livros"])
-def obter_livro_por_id(id: int):
-    livro = biblioteca_livro_repositorio.obter_por_id(id)
+def obter_livro_por_id(id: int, db: Session = Depends(get_db)):
+    livro = biblioteca_livro_repositorio.obter_por_id(db, id)
 
     if livro is None:
         raise HTTPException(status_code= 404, detail="Livro não encontrado")
@@ -403,8 +403,8 @@ def alterar_livro(id: int, livro: LivroEditar):
 
 
 @app.delete("/api/v1/livros/{id}", tags=["Livros"])
-def apagar_livro(id: int):
-    linhas_apagadas = biblioteca_livro_repositorio.apagar(id)
+def apagar_livro(id: int, db: Session = Depends(get_db)):
+    linhas_apagadas = biblioteca_livro_repositorio.apagar(db, id)
 
     if linhas_apagadas != 1:
         raise HTTPException(status_code= 404, detail="Livro não encontrado")

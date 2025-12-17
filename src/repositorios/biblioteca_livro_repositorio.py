@@ -5,26 +5,14 @@ from sqlalchemy.orm import Session
 from src.database.models import Livro
 
 
-def apagar(id: int) -> int:
-    conexao = conectar_biblioteca()
-
-    cursor = conexao.cursor()
-
-    sql = "DELETE FROM livros WHERE id = %s"
-
-    dados = (id,)
-
-    cursor.execute(sql, dados)
-
-    conexao.commit()
-
-    linhas_apagadas = cursor.rowcount
-
-    conexao.close()
-
-    cursor.close()
-
-    return linhas_apagadas
+def apagar(db: Session, id: int) -> int:
+    livro = db.query(Livro).filter(Livro.id == id).first()
+    if not livro:
+        return 0
+    
+    db.delete(livro)
+    db.commit()
+    return 1
 
 
 def cadastrar(db: Session, titulo: str, quantidade_paginas: int, autor: str, preco: float, isbn: str, descricao: str):
@@ -71,28 +59,7 @@ def obter_todos(db: Session):
     return livros
 
 
-def obter_por_id(id: int):
-    conexao = conectar_biblioteca()
+def obter_por_id(db: Session, id: int):
+    livro = db.query(Livro).filter(Livro.id == id).first()
 
-    cursor = conexao.cursor()
-
-    sql = "SELECT id, titulo, quantidade_paginas, autor, preco, isbn, descricao FROM livros WHERE id= %s"
-
-    dados = (id, )
-
-    cursor.execute(sql, dados)
-
-    registro = cursor.fetchone()
-
-    if not registro:
-        return None
-    
-    return {
-        "id": registro[0],
-        "titulo": registro[1],
-        "quantidade_paginas": registro[2],
-        "autor": registro[3],
-        "preco": registro[4],
-        "isbn": registro[5],
-        "descricao": registro[6]
-    }
+    return livro

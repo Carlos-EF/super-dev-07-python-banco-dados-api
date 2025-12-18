@@ -446,7 +446,7 @@ def cadastrar_manga(manga: MangaCriar, db: Session = Depends(get_db)):
 
 
 @app.put("/api/v1/mangas/{id}", tags=["Mangás"])
-def editar_manga(id: int, manga: MangaEditar, db:Session = Depends(get_db)):
+def editar_manga(id: int, manga: MangaEditar, db: Session = Depends(get_db)):
     linhas_alteradas = biblioteca_manga_repositorio.editar(db, id, manga.nome, manga.volume, manga.autor, manga.data_lancamento)
 
     if linhas_alteradas != 1:

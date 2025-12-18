@@ -64,3 +64,12 @@ class Manga(Base):
     volume = Column(Integer, nullable=False)
     autor = Column(String(100), nullable=False)
     data_lancamento = Column(Date, nullable=False)
+
+
+# -------------------------------------------------------------------- Biblioteca : Revista -----------------------------------------------------------------------
+
+class Revista(Base):
+    __tablename__ = "revista"
+
+    id = Column(Integer, primary_key= True, autoincrement=True)
+    titulo = Column(String(100), nullable=False)

@@ -419,15 +419,15 @@ def apagar_livro(id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/api/v1/mangas", tags=["Mangás"])
-def listar_mangas():
-    mangas = biblioteca_manga_repositorio.obter_todos()
+def listar_mangas(db: Session = Depends(get_db)):
+    mangas = biblioteca_manga_repositorio.obter_todos(db)
 
     return mangas
 
 
 @app.get("/api/v1/mangas/{id}", tags=["Mangás"])
-def obter_manga_por_id(id: int):
-    manga = biblioteca_manga_repositorio.obter_por_id(id)
+def obter_manga_por_id(id: int, db: Session = Depends(get_db)):
+    manga = biblioteca_manga_repositorio.obter_por_id(db, id)
 
     if manga is None:
         raise HTTPException(status_code= 404, detail="Mangá não encontrado")
@@ -437,8 +437,8 @@ def obter_manga_por_id(id: int):
 
 
 @app.post("/api/v1/mangas", tags=["Mangás"])
-def cadastrar_manga(manga: MangaCriar):
-    biblioteca_manga_repositorio.cadastrar(manga.nome, manga.volume, manga.autor, manga.data_lancamento)
+def cadastrar_manga(manga: MangaCriar, db: Session = Depends(get_db)):
+    biblioteca_manga_repositorio.cadastrar(db, manga.nome, manga.volume, manga.autor, manga.data_lancamento)
 
     return {
         "status": "OK"
@@ -446,8 +446,8 @@ def cadastrar_manga(manga: MangaCriar):
 
 
 @app.put("/api/v1/mangas/{id}", tags=["Mangás"])
-def editar_manga(id: int, manga: MangaEditar):
-    linhas_alteradas = biblioteca_manga_repositorio.editar(id, manga.nome, manga.volume, manga.autor, manga.data_lancamento)
+def editar_manga(id: int, manga: MangaEditar, db:Session = Depends(get_db)):
+    linhas_alteradas = biblioteca_manga_repositorio.editar(db, id, manga.nome, manga.volume, manga.autor, manga.data_lancamento)
 
     if linhas_alteradas != 1:
         raise HTTPException(status_code= 404, detail="Mangá não encontrado")
@@ -459,8 +459,8 @@ def editar_manga(id: int, manga: MangaEditar):
 
 url_manga_com_id = "/api/v1/mangas/{id}"
 @app.delete(url_manga_com_id, tags=["Mangás"])
-def apagar_manga(id: int):
-    linhas_apagadas = biblioteca_manga_repositorio.apagar(id)
+def apagar_manga(id: int, db: Session = Depends(get_db)):
+    linhas_apagadas = biblioteca_manga_repositorio.apagar(db, id)
 
     if linhas_apagadas != 1:
         raise HTTPException(status_code= 404, detail="Mangá não encontrado")

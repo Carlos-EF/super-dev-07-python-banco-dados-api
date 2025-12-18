@@ -54,3 +54,13 @@ class Livro(Base):
     isbn = Column(String(100), nullable=False)
     descricao = Column(Text, nullable=False)
 
+# -------------------------------------------------------------------- Biblioteca : Mangá -----------------------------------------------------------------------
+
+class Manga(Base):
+    __tablename__ = "manga"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nome = Column(String(100), nullable=False)
+    volume = Column(Integer, nullable=False)
+    autor = Column(String(100), nullable=False)
+    data_lancamento = Column(Date, nullable=False)

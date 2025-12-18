@@ -479,15 +479,15 @@ url_revista_com_id = "/api/v1/revistas/{id}"
 
 
 @app.get(url_revista, tags=["Revistas"])
-def listar_revistas():
-    revistas = biblioteca_revista_repositorio.obter_todos()
+def listar_revistas(db: Session = Depends(get_db)):
+    revistas = biblioteca_revista_repositorio.obter_todos(db)
 
     return revistas
 
 
 @app.get(url_revista_com_id, tags=["Revistas"])
-def obter_revista_por_id(id: int):
-    revista = biblioteca_revista_repositorio.obter_por_id(id)
+def obter_revista_por_id(id: int, db: Session = Depends(get_db)):
+    revista = biblioteca_revista_repositorio.obter_por_id(db, id)
 
     if revista is None:
         raise HTTPException(status_code= 404, detail="Revista não encontrada")
@@ -496,8 +496,8 @@ def obter_revista_por_id(id: int):
 
 
 @app.post(url_revista, tags=["Revistas"])
-def cadastrar_revista(revista: RevistaCriar):
-    biblioteca_revista_repositorio.cadastrar(revista.titulo, revista.edicao, revista.data_publicacao, revista.editora)
+def cadastrar_revista(revista: RevistaCriar, db: Session = Depends(get_db)):
+    biblioteca_revista_repositorio.cadastrar(db, revista.titulo, revista.edicao, revista.data_publicacao, revista.editora)
 
     return {
         "status": "OK"
@@ -505,8 +505,8 @@ def cadastrar_revista(revista: RevistaCriar):
 
 
 @app.put(url_revista_com_id, tags=["Revistas"])
-def editar_revista(id: int, revista: RevistaEditar):
-    linhas_alteradas = biblioteca_revista_repositorio.editar(id, revista.titulo, revista.edicao, revista.data_publicacao, revista.editora)
+def editar_revista(id: int, revista: RevistaEditar, db: Session = Depends(get_db)):
+    linhas_alteradas = biblioteca_revista_repositorio.editar(db, id, revista.titulo, revista.edicao, revista.data_publicacao, revista.editora)
 
     if linhas_alteradas != 1:
         raise HTTPException(status_code= 404, detail="Revista não encontrada")
@@ -518,8 +518,8 @@ def editar_revista(id: int, revista: RevistaEditar):
 
 
 @app.delete(url_revista_com_id, tags=["Revistas"])
-def apagar_revista(id: int):
-    linhas_apagadas = biblioteca_revista_repositorio.apagar(id)
+def apagar_revista(id: int, db: Session = Depends(get_db)):
+    linhas_apagadas = biblioteca_revista_repositorio.apagar(db, id)
 
     if linhas_apagadas != 1:
         raise HTTPException(status_code= 404, detail="Revista não encontrada")

@@ -73,3 +73,6 @@ class Revista(Base):
 
     id = Column(Integer, primary_key= True, autoincrement=True)
     titulo = Column(String(100), nullable=False)
+    edicao = Column(Integer, nullable=False)
+    data_publicacao = Column(Date, nullable=False)
+    editora = Column(String(100), nullable=False)
